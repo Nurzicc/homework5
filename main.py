@@ -8,12 +8,12 @@ import asyncio
 import logging
 from config import token
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO) #полный код лагирования
 
 bot = Bot(token=token)
 dp = Dispatcher(storage=MemoryStorage())
 
-connect = sqlite3.connect("bank_bot.db")
+connect = sqlite3.connect("bank_bot.db")    
 cursor = connect.cursor()
 
 cursor.execute("""
@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
     username TEXT,
     full_name TEXT,
-    balance REAL DEFAULT 5
+    balance REAL DEFAULT 5 
 );
 """)
-connect.commit()
+connect.commit() #сохраняем запрос
 
 class Registration(StatesGroup):
     full_name = State()
@@ -39,9 +39,9 @@ def register_user(user_id, username, full_name):
     """, (user_id, username, full_name))
     connect.commit()
 
-def is_registered(user_id: int) -> bool:
+def is_registered(user_id):
     cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id,))
-    return cursor.fetchone() is not None
+    return cursor.fetchone()
 
 
 @dp.message(Command("start"))
